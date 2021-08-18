@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import filedialog
 import tkinter
+from tkinter import ttk
+import csv
+
 
 class NewWindow:
 
@@ -8,6 +11,17 @@ class NewWindow:
         self.i=0
         f2 = Frame(master)
         f2.place(x=0, y=0,width=500,height=600)
+
+
+    def firstfram(self):
+        self.f1 = Frame()
+        self.f1.place(x=0, y=0, width=500, height=600)
+        self.b1 = Button(self.f1, text="New Entry", command=self.newEntry)
+        self.b1.grid(column=0, row=0)
+
+        b2 = Button(self.f1, text="list of student", command=self.ListOfStudent)
+        b2.grid(column=0, row=1)
+
 
     def seeFile(self):
         self.f3 = Frame()
@@ -37,8 +51,11 @@ class NewWindow:
         self.e3 = Entry(self.f2)
         self.e3.grid(column=1, row=2)
         self.b2 = Button(self.f2, text="Save", command=self.savefile)
+        self.b2.grid(column=1,row=3)
+        self.b3 = Button(self.f2, text="Back", command=self.backNewEntry)
+        self.b3.grid(column=1,row=4)
 
-        self.b2.grid()
+
     def savefile(self):
         self.i += 1
         self.seeFile()
@@ -52,18 +69,35 @@ class NewWindow:
         myfile.close()
 
     def ListOfStudent(self):
-        newf=Frame()
-        newf.place(x=0,y=0,width=500,height=600)
-        lab = Label(newf,text="name")
-        lab.grid()
-        myfile = open("game1.txt","r")
-        f=myfile.readlines()
-        print(f)
-        for n in f:
-            lab.config(text="{0}\n".format(n))
-            print(n)
+        self.newf=Frame()
+        self.newf.place(x=0,y=0,width=500,height=600)
+        self.lab = Label(self.newf,text="name")
+        self.lab.grid(column=0,row=0)
+        #table
+        tv = ttk.Treeview(self.newf, columns=(1, 2, 3),show="headings")
+        tv.grid(column=0,row=1)
+        tv.heading(1, text="Name")
+        tv.heading(2, text="Class")
+        tv.heading(3, text="Date")
+        file = open("Data.csv")
+        Reader = csv.DictReader(file)
+        for x in Reader:
+            print(x['Name'])
+            tv.insert("",END,value=x['Name'])
+            tv.insert("",END,value=x['Class'])
 
-        myfile.close()
+        self.backb = Button(self.newf, text="Back", command=self.backListofStudent)
+        self.backb.grid(column=1, row=4)
+
+    def backNewEntry(self):
+        self.f2.destroy()
+        self.firstfram()
+
+
+    def backListofStudent(self):
+        self.newf.destroy()
+        self.firstfram()
+
 
 
 
